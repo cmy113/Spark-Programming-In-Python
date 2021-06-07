@@ -41,6 +41,17 @@ if __name__ == "__main__":
 
     product_renamed_df = product_df.withColumnRenamed("qty", "reorder_qty")
 
+
+    order_df.join(product_renamed_df, join_expr, "left") \
+        .drop(product_renamed_df.prod_id) \
+        .select("order_id", "prod_id", "prod_name", "unit_price", "list_price", "qty") \
+        .sort("order_id") \
+        .show()
+
+
+    # What the coalesce does is that for prod_name column, it will first look for prod_name, if it's null, it will replace with prod_id
+    # What the coalesce does is that for list_price column, it will first look for list_price, if it's null, it will replace with unit_price
+
     order_df.join(product_renamed_df, join_expr, "left") \
         .drop(product_renamed_df.prod_id) \
         .select("order_id", "prod_id", "prod_name", "unit_price", "list_price", "qty") \
